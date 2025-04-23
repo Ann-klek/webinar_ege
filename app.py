@@ -5,6 +5,7 @@ import schedule
 import time
 import threading
 import os
+from email.message import EmailMessage
 
 # Инициализация Flask приложения
 app = Flask(__name__)
