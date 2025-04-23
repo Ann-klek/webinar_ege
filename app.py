@@ -1,5 +1,7 @@
 from flask import Flask, request, jsonify, render_template
 from flask_sqlalchemy import SQLAlchemy
+from functools import wraps
+from flask import Response
 import smtplib
 import schedule
 import time
@@ -14,6 +16,24 @@ app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', 'postgresql://webinar_db_qidc_user:aDr87iIAhDWseaDCiPwK9leFuFMLiSN7@dpg-d04946i4d50c739un2r0-a.oregon-postgres.render.com/webinar_db_qidc')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
+
+def check_auth(username, password):
+    return username == os.environ.get("EXPORT_USER", "admin") and password == os.environ.get("EXPORT_PASS", "secret")
+
+def authenticate():
+    return Response(
+        'Требуется авторизация', 401,
+        {'WWW-Authenticate': 'Basic realm="Login Required"'}
+    )
+
+def requires_auth(f):
+    @wraps(f)
+    def decorated(*args, **kwargs):
+        auth = request.authorization
+        if not auth or not check_auth(auth.username, auth.password):
+            return authenticate()
+        return f(*args, **kwargs)
+    return decorated
 
 # Модель для хранения данных пользователей
 class User(db.Model):
@@ -79,8 +99,8 @@ def index():
 
     return render_template('index.html')
 
-# Экспорт данных пользователей (для просмотра)
 @app.route('/export')
+@requires_auth
 def export_data():
     users = User.query.all()
     output = []
@@ -90,7 +110,8 @@ def export_data():
             'last_name': user.last_name,
             'email': user.email
         })
-    return jsonify(output)  # или можно сделать CSV-файл, если нужно
+    return jsonify(output)
+
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=int(os.environ.get("PORT", 5000)))
