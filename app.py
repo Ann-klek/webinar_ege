@@ -30,17 +30,21 @@ with app.app_context():
 
 # Функция для отправки письма на почту
 def send_email(subject, body, to_email):
-    from_email = "kleckovkinaa@yandex.ru"
+    SENDER_EMAIL = "kleckovkinaa@yandex.ru"
     password = "suslnpqvbmqtvvto"
     smtp_server = "smtp.yandex.ru"
     smtp_port = 587
-
+    msg = EmailMessage()
+    msg['From'] = SENDER_EMAIL
+    msg['To'] = to_email
+    msg['Subject'] = subject
+    msg.set_content(body)
     try:
         with smtplib.SMTP(smtp_server, smtp_port) as server:
             server.starttls()
-            server.login(from_email, password)
+            server.login(SENDER_EMAIL, password)
             message = f"Subject: {subject}\n\n{body}"
-            server.sendmail(from_email, to_email, message)
+            server.send_message(msg)
     except Exception as e:
         print(f"Error sending email: {e}")
 
