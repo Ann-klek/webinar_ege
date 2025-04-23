@@ -32,7 +32,7 @@ with app.app_context():
 def send_email(subject, body, to_email):
     from_email = "kleckovkinaa@yandex.ru"
     password = "suslnpqvbmqtvvto"
-    smtp_server = "smtp.yandex.com"
+    smtp_server = "smtp.yandex.ru"
     smtp_port = 587
 
     try:
