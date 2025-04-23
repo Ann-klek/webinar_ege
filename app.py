@@ -56,22 +56,22 @@ def send_confirmation_email(email, first_name):
 @app.route('/', methods=['GET', 'POST'])
 def index():
     if request.method == 'POST':
-        data = request.get_json()
-        first_name = data.get('first_name')
-        last_name = data.get('last_name')
-        email = data.get('email')
-
-        # Создаём нового пользователя
-        new_user = User(first_name=first_name, last_name=last_name, email=email)
+        first_name = request.form.get('first_name')
+        last_name = request.form.get('last_name')
+        email = request.form.get('email')
 
         # Добавляем пользователя в базу данных
+        new_user = User(first_name=first_name, last_name=last_name, email=email)
         db.session.add(new_user)
         db.session.commit()
 
-        # Отправляем email
+        # Отправляем подтверждение и планируем письмо со ссылкой
         send_confirmation_email(email, first_name)
+        schedule_webinar_email(email, first_name)
 
-        return jsonify({'success': True})
+        # Возвращаем ту же страницу с сообщением об успехе
+        return render_template('index.html', success=True)
+
     return render_template('index.html')
 
 # Экспорт данных пользователей (для просмотра)
