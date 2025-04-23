@@ -1,3 +1,5 @@
 Flask
 schedule
 apscheduler
+Flask-SQLAlchemy
+psycopg2
