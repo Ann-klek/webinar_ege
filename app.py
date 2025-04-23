@@ -67,7 +67,7 @@ def index():
 
         # Отправляем подтверждение и планируем письмо со ссылкой
         send_confirmation_email(email, first_name)
-        schedule_webinar_email(email, first_name)
+        
 
         # Возвращаем ту же страницу с сообщением об успехе
         return render_template('index.html', success=True)
