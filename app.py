@@ -10,7 +10,7 @@ from email.message import EmailMessage
 app = Flask(__name__)
 
 # Строка подключения к базе данных PostgreSQL
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', 'postgresql://admin:1234@127.0.0.1:5432/webinar_db')
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', 'postgresql://webinar_db_qidc_user:aDr87iIAhDWseaDCiPwK9leFuFMLiSN7@dpg-d04946i4d50c739un2r0-a.oregon-postgres.render.com/webinar_db_qidc')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
