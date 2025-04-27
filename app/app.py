@@ -3,9 +3,6 @@ from flask_sqlalchemy import SQLAlchemy
 from functools import wraps
 from flask import Response
 import smtplib
-import schedule
-import time
-import threading
 import os
 from email.message import EmailMessage
 
@@ -13,7 +10,7 @@ from email.message import EmailMessage
 app = Flask(__name__)
 
 # Строка подключения к базе данных PostgreSQL
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', 'postgresql://webinar_db_qidc_user:aDr87iIAhDWseaDCiPwK9leFuFMLiSN7@dpg-d04946i4d50c739un2r0-a.oregon-postgres.render.com/webinar_db_qidc')
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', 'postgresql://admin:1234@127.0.0.1:5432/webinar_db')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
@@ -72,7 +69,7 @@ def send_email(subject, body, to_email):
 # Отправка подтверждения регистрации
 def send_confirmation_email(email, first_name):
     subject = "Подтверждение регистрации на вебинар"
-    body = f"Здравствуйте, {first_name}!\nВы успешно зарегистрировались на вебинар."
+    body = f"Здравствуйте, {first_name}!\nВы успешно зарегистрировались на вебинар.\n📅Ссылку-приглашение вышлем 3 мая\n📚Больше полезной информации по подготовке к ЕГЭ по информатике в моем Telegram-канале.\n 👉 https://t.me/ege_infa_astpva \n\nДо встречи на вебинаре!"
     send_email(subject, body, email)
 
 
